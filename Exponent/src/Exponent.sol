@@ -13,5 +13,7 @@ contract Exponent {
         returns (uint256)
     {
         // your code here
+        uint256 exp = _base ** _e ;
+        return exp ;
     }
 }
