@@ -7,5 +7,12 @@ contract Mean {
      */
     function mean(uint256[] calldata arr) public view returns (uint256) {
         // your code here
+        uint256 sum = 0;
+        uint256 totalLength = arr.length;
+        for(uint256 i = 0; i < arr.length ; i++ ) {
+            sum += arr[i];
+        }
+        uint256 mean = sum / totalLength;
+        return mean ;
     }
 }

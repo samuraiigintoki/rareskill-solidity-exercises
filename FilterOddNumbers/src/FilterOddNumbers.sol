@@ -16,5 +16,25 @@ contract FilterOddNumbers {
         returns (uint256[] memory)
     {
         // your code here
+        uint256 count = 0;
+
+        for (uint256 i = 0 ; i < _arr.length ; i++) {
+            if (_arr[i] % 2 == 0) {
+                count += 1 ;//add odd number to tempArr
+            }
+
+        }
+
+        uint256[] memory tempArr = new uint256[](count);
+        uint256 j = 0;
+
+        for(uint256 i = 0 ; i < _arr.length ; i++){
+            if (_arr[i] % 2 == 0) {
+                tempArr[j] = _arr[i];
+                j++;
+            }
+        }
+        return tempArr;
     }
+
 }
