@@ -13,7 +13,7 @@ curl -L https://foundry.paradigm.xyz | bash
 Clone this repository
 
 ```
-git clone https://github.com/rareSkills/solidity-exercises.git
+git clone https://github.com/samuraiigintoki/rareskill-solidity-exercises
 ```
 
 Complete the exercises in order and test with
