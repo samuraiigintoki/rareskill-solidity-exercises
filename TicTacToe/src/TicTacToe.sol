@@ -14,8 +14,24 @@ contract TicTacToe {
         // your code here
         for (uint256 i = 0 ; i < board.length ; i++) {
             for (uint256 j = 0 ; j < board[i].length ; j++) {
-                if( board[i][j] == )
+                if( board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
+                    return true ;
+                }
+
+                if(board[0][j] == board[1][j] && board[1][j] == board[2][j]) {
+                    return true ;
+                }
+
+                if(board[0][0] == board[1][1] && board[1][1]==board[2][2]) {
+                    return true ;
+                }
+                
+                if(board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
+                    return true ;
+                }
+
             }
         }
+        return false;
     }
 }
