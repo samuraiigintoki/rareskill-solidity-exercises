@@ -13,5 +13,12 @@ contract Distribute {
 
     function distributeEther(address[] memory addresses) public {
         // your code here
+        uint256 total = address(this).balance;
+        uint256 share = total / addresses.length;
+
+        for(uint256 i = 0; i < addresses.length ; i++){
+            (bool success,) = addresses[i].call{value:share}("");
+            require(success, "transfer failed");
+        }
     }
 }
