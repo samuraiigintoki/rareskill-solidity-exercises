@@ -11,13 +11,26 @@ contract ReducingPayout {
     */
 
     // The time 1 ether was sent to this contract
+    uint256 public constant DURATION = 24 hours;
     uint256 public immutable depositedTime;
+    uint256 public initialBalance;
 
     constructor() payable {
+        require(msg.value == 1 ether , "Must fund with 1 ETH");
         depositedTime = block.timestamp;
+        initialBalance = address(this).balance;
     }
 
     function withdraw() public {
         // your code here
+        uint256 elapsed = block.timestamp - depositedTime;
+
+        require(elapsed >= DURATION, "No funds remaining to withdraw");
+
+        uint256 remainingTime = DURATION - elapsed;
+        uint256 amountToWithdraw = (initialBalance * remainingTime) / DURATION;
+
+        (bool success,) = msg.sender.call{value: amountToWithdraw}("");
+        require(success,"Tranfer failed");
     }
 }

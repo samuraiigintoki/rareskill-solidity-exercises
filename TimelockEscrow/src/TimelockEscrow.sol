@@ -3,6 +3,17 @@ pragma solidity ^0.8.13;
 
 contract TimelockEscrow {
     address public seller;
+    uint256 public constant THREE_DAYS = 3 days;
+
+
+    mapping(address => Escrow) public escrows;
+
+    struct Escrow {
+        uint256 amount;
+        uint256 startTime;
+        bool active;
+    }
+    
 
     /**
      * The goal of this exercise is to create a Time lock escrow.
@@ -22,6 +33,13 @@ contract TimelockEscrow {
      */
     function createBuyOrder() external payable {
         // your code here
+        Escrow storage userEscrow = escrows[msg.sender];
+
+        require(msg.value > 0, "Must not be zero");
+        
+        userEscrow.amount = msg.value;
+        userEscrow.startTime = block.timestamp;
+        userEscrow.active = true;
     }
 
     /**
@@ -29,6 +47,19 @@ contract TimelockEscrow {
      */
     function sellerWithdraw(address buyer) external {
         // your code here
+        require(msg.sender == seller,"Not authorized");
+     
+        Escrow storage userEscrow = escrows[buyer];
+        require(block.timestamp >= userEscrow.startTime + THREE_DAYS , "Not enough time passed");
+
+        uint256 amount = userEscrow.amount;
+
+        userEscrow.amount = 0;
+        userEscrow.active = false;
+        
+        (bool success,) = seller.call{value: amount}("");
+        require(success, "transfer Failed");
+        
     }
 
     /**
@@ -36,10 +67,22 @@ contract TimelockEscrow {
      */
     function buyerWithdraw() external {
         // your code here
+        Escrow storage userEscrow = escrows[msg.sender];
+        require(userEscrow.active == true , "Escrow period over");
+        require(block.timestamp < userEscrow.startTime + THREE_DAYS, "escrow period ended ");
+
+        uint256 amount = userEscrow.amount;
+
+        userEscrow.amount = 0;
+        userEscrow.active = false;
+
+        (bool success,) = msg.sender.call{value: amount}("");
+        require(success, "transfer failed");
     }
 
     // returns the escrowed amount of @param buyer
     function buyerDeposit(address buyer) external view returns (uint256) {
         // your code here
+        return escrows[buyer].amount;
     }
 }
